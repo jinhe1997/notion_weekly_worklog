@@ -66,9 +66,22 @@ async function retriveBlock() {
 
 
 
-async function appendBlockChildren() {
+async function retriveBlockChildren() {
     try {
         const blockId = 'ac4345b510f340598d890bd74ce11efe';
+        const response = await notion.blocks.children.list({ block_id: blockId });
+        console.log(response);
+        console.log(response)
+        console.log("Success! Entry added.")
+    } catch (error) {
+        console.error(error.body)
+    }
+}
+// https://www.notion.so/TEST-ac4345b510f340598d890bd74ce11efe#0e4d154c149a449ba2b2edfa5b333310
+
+async function appendBlockChildren() {
+    try {
+        const blockId = '0e4d154c-149a-449b-a2b2-edfa5b333310';
         const response = await notion.blocks.children.append({
             block_id: blockId,
             children: [
@@ -113,5 +126,5 @@ async function appendBlockChildren() {
 
 
 
-
-appendBlockChildren()
+appendBlockChildren();
+// retriveBlockChildren()
