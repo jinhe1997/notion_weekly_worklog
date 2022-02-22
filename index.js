@@ -68,11 +68,13 @@ async function retriveBlock() {
 
 async function retriveBlockChildren() {
     try {
-        const blockId = 'ac4345b510f340598d890bd74ce11efe';
+        const blockId = '0e4d154c-149a-449b-a2b2-edfa5b333310';
         const response = await notion.blocks.children.list({ block_id: blockId });
         console.log(response);
         console.log(response)
         console.log("Success! Entry added.")
+        console.log(response.results[0].toggle.text[1]);
+
     } catch (error) {
         console.error(error.body)
     }
@@ -87,35 +89,27 @@ async function appendBlockChildren() {
             children: [
                 {
                     object: 'block',
-                    type: 'heading_2',
-                    heading_2: {
-                        text: [
-                            {
-                                type: 'text',
-                                text: {
-                                    content: 'Lacinato kale',
-                                },
-                            },
-                        ],
-                    },
-                },
-                {
-                    object: 'block',
                     type: 'paragraph',
                     paragraph: {
                         text: [
                             {
-                                type: 'text',
-                                text: {
-                                    content: 'Lacinato kale is a variety of kale with a long tradition in Italian cuisine, especially that of Tuscany. It is also known as Tuscan kale, Italian kale, dinosaur kale, kale, flat back kale, palm tree kale, or black Tuscan palm.',
-                                    link: {
-                                        url: 'https://en.wikipedia.org/wiki/Lacinato_kale',
-                                    },
+                                type: 'mention',
+                                mention: {
+                                    type: 'date',
+                                    date: { start: '2022-02-21', end: null, time_zone: null }
+                                },
+                                annotations: {
+                                    bold: false,
+                                    italic: false,
+                                    strikethrough: false,
+                                    underline: false,
+                                    code: false,
+                                    color: 'default'
                                 },
                             },
                         ],
                     },
-                },
+                }
             ],
         });
         console.log(response);
@@ -127,4 +121,4 @@ async function appendBlockChildren() {
 
 
 appendBlockChildren();
-// retriveBlockChildren()
+// retriveBlockChildren();
