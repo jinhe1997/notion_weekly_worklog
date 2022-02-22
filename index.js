@@ -3,7 +3,7 @@ const { Client } = require('@notionhq/client')
 
 //Init clinet
 
-const notionclient = new Client(
+const notion = new Client(
     {
         auth: process.env.NOTION_TOKEN
     }
@@ -12,9 +12,11 @@ const notionclient = new Client(
 const databaseId = process.env.NOTION_DATABASE_ID
 
 
+// https://www.notion.so/TEST-ac4345b510f340598d890bd74ce11efe
+
 async function addItem(text) {
     try {
-        const response = await notionclient.pages.create({
+        const response = await notion.pages.create({
             parent: { database_id: databaseId },
             properties: {
                 title: {
@@ -35,4 +37,81 @@ async function addItem(text) {
     }
 }
 
-addItem("Yurts in Big Sur, California")
+// addItem("Yurts in Big Sur, California")
+
+
+async function retrivePage() {
+    try {
+        const pageId = 'ac4345b510f340598d890bd74ce11efe';
+        const response = await notion.pages.retrieve({ page_id: pageId });
+        console.log(response);
+        console.log(response)
+        console.log("Success! Entry added.")
+    } catch (error) {
+        console.error(error.body)
+    }
+}
+
+async function retriveBlock() {
+    try {
+        const blockId = 'ac4345b510f340598d890bd74ce11efe#d718754e4d54429e98a419c47781a552';
+        const response = await notion.blocks.retrieve({ block_id: blockId });
+        console.log(response);
+        console.log(response)
+        console.log("Success! Entry added.")
+    } catch (error) {
+        console.error(error.body)
+    }
+}
+
+
+
+async function appendBlockChildren() {
+    try {
+        const blockId = 'ac4345b510f340598d890bd74ce11efe';
+        const response = await notion.blocks.children.append({
+            block_id: blockId,
+            children: [
+                {
+                    object: 'block',
+                    type: 'heading_2',
+                    heading_2: {
+                        text: [
+                            {
+                                type: 'text',
+                                text: {
+                                    content: 'Lacinato kale',
+                                },
+                            },
+                        ],
+                    },
+                },
+                {
+                    object: 'block',
+                    type: 'paragraph',
+                    paragraph: {
+                        text: [
+                            {
+                                type: 'text',
+                                text: {
+                                    content: 'Lacinato kale is a variety of kale with a long tradition in Italian cuisine, especially that of Tuscany. It is also known as Tuscan kale, Italian kale, dinosaur kale, kale, flat back kale, palm tree kale, or black Tuscan palm.',
+                                    link: {
+                                        url: 'https://en.wikipedia.org/wiki/Lacinato_kale',
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                },
+            ],
+        });
+        console.log(response);
+    } catch (error) {
+        console.error(error.body)
+    }
+}
+
+
+
+
+appendBlockChildren()
