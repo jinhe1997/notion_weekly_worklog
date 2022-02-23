@@ -1,5 +1,8 @@
 const dotenv = require('dotenv').config();
 const { Client } = require('@notionhq/client')
+const weekday = require('dayjs/plugin/weekday')
+const dayjs = require('dayjs').extend(weekday)
+
 
 //Init clinet
 
@@ -73,17 +76,62 @@ async function retriveBlockChildren() {
         console.log(response);
         console.log(response)
         console.log("Success! Entry added.")
-        console.log(response.results[0].toggle.text[1]);
+        console.log(response.results[0].toggle);
 
     } catch (error) {
         console.error(error.body)
     }
 }
-// https://www.notion.so/TEST-ac4345b510f340598d890bd74ce11efe#0e4d154c149a449ba2b2edfa5b333310
+
+
+var workdaytoggles = [];
+const blockId = '0e4d154c-149a-449b-a2b2-edfa5b333310';
+
+function setworkdays()
+{
+    for (let index = 1; index < 5; index++) {
+        var workday = dayjs().weekday(index).format('YYYY-MM-DD');
+        generateWorkDayToggle(workday);
+    }
+}
+
+
+function generateWorkDayToggle(day) {
+    let toggle = {
+        block_id: blockId,
+        children: [
+            {
+                object: 'block',
+                type: 'paragraph',
+                paragraph: {
+                    text: [
+                        {
+                            type: 'mention',
+                            mention: {
+                                type: 'date',
+                                date: { start: day, end: null, time_zone: null }
+                            },
+                            annotations: {
+                                bold: false,
+                                italic: false,
+                                strikethrough: false,
+                                underline: false,
+                                code: false,
+                                color: 'default'
+                            },
+                        },
+                    ],
+                },
+            }
+        ],
+    }
+    workdaytoggles.push(toggle)
+}
+
+
 
 async function appendBlockChildren() {
     try {
-        const blockId = '0e4d154c-149a-449b-a2b2-edfa5b333310';
         const response = await notion.blocks.children.append({
             block_id: blockId,
             children: [
@@ -119,6 +167,19 @@ async function appendBlockChildren() {
 }
 
 
+async function appendworkdaytoggle() {
+    try {
+        const response = await notion.blocks.children.append(workdaytoggles);
+        console.log(response);
+    } catch (error) {
+        console.error(error.body)
+    }
+}
 
-appendBlockChildren();
-// retriveBlockChildren();
+
+
+// appendBlockChildren();
+retriveBlockChildren();
+// setworkdays();
+// appendworkdaytoggle();
+// console.log(workdaytoggles);
